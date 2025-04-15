@@ -1,2 +1,3 @@
-# examples
+# KappaML Examples
+
 Examples using KappaML
