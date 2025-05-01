@@ -27,12 +27,25 @@ export KAPPAML_API_KEY="your_api_key_here"
 
 Run one of the following examples.
 
-## KappaML API Regression Example
+## KappaML API Regression Examples
 
+### From Python script
 This example demonstrates how to use the KappaML API to perform regression tasks.
 
 ```bash
-python api_regression.py
+python regression/kappaml_api_regression.py
+```
+
+### From Jupyter Notebook
+
+```bash
+jupyter notebook regression/kappaml_api_regression.ipynb
+```
+
+### From Streamlit app
+
+```bash
+streamlit run regression/kappaml_api_regression_streamlit.py
 ```
 
 ## KappaML API Classification Example
