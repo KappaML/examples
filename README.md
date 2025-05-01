@@ -29,24 +29,26 @@ Run one of the following examples.
 
 ## KappaML API Regression Examples
 
-### From Python script
+### Python script
 This example demonstrates how to use the KappaML API to perform regression tasks.
 
 ```bash
 python regression/kappaml_api_regression.py
 ```
 
-### From Jupyter Notebook
+### Jupyter Notebook
 
 ```bash
 jupyter notebook regression/kappaml_api_regression.ipynb
 ```
 
-### From Streamlit app
+### Streamlit app
 
 ```bash
 streamlit run regression/kappaml_api_regression_streamlit.py
 ```
+
+![kappaml_api_regression_streamlit.gif](regression/kappaml_api_regression_streamlit.gif)
 
 ## KappaML API Classification Example
 
@@ -54,7 +56,13 @@ TBA
 
 ## KappaML API Forecasting Example
 
-TBA
+### Streamlit app
+
+```bash
+streamlit run forecasting/kappaml_api_forecast_streamlit.py
+```
+
+![kappaml_api_forecast_streamlit.gif](forecasting/kappaml_api_forecast_streamlit.gif)
 
 ## KappaML API Anomaly Detection Example
 

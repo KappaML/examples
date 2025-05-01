@@ -1,2 +1,6 @@
-river
+river>=0.22.0
 requests
+streamlit
+plotly
+pandas
+numpy
