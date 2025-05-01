@@ -10,11 +10,9 @@ from datetime import datetime
 import numpy as np
 
 # Constants
-MODEL_ID = "90f297a0-c4bc-4060-a080-b299840b3066"
+MODEL_ID = "90f297a0-c4bc-4060-a080-b299840b3066"  # Replace with your regression model ID
 BASE_URL = f"https://api.kappaml.com/v1/models/{MODEL_ID}"
 API_KEY = os.getenv("KAPPAML_API_KEY")
-
-BASE_URL = "http://localhost:8080"
 
 # Create a session object to reuse connections
 session = requests.Session()
