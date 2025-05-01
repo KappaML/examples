@@ -8,11 +8,13 @@ import pandas as pd
 import plotly.graph_objects as go
 from datetime import datetime
 import numpy as np
+from math import radians, sin, cos, sqrt, atan2
 
 # Constants
 MODEL_ID = "90f297a0-c4bc-4060-a080-b299840b3066"  # Replace with your regression model ID
 BASE_URL = f"https://api.kappaml.com/v1/models/{MODEL_ID}"
 API_KEY = os.getenv("KAPPAML_API_KEY")
+
 
 # Create a session object to reuse connections
 session = requests.Session()
@@ -21,19 +23,69 @@ session.headers.update({"X-API-Key": API_KEY})
 def load_and_prepare_data():
     """Load and prepare the Restaurants dataset."""
     restaurants = Restaurants()
+    
     data = []
+
+    # Create dictionaries to track categorical feature encodings
+    categorical_encodings = {}
     
     for x, y in restaurants:
         features_processed = {}
         for feat_name, feat_value in x.items():
             if isinstance(feat_value, (int, float)):
-                features_processed[feat_name] = float(feat_value)
+                # Numeric values can be used directly 
+                features_processed[feat_name] = feat_value
             elif isinstance(feat_value, datetime):
+                # Enhanced datetime features
                 epoch = datetime(1970, 1, 1)
-                months_since_1970 = (feat_value.year - epoch.year) * 12 + feat_value.month - epoch.month
-                features_processed[feat_name] = float(months_since_1970)
+                features_processed['months_since_1970'] = (feat_value.year - epoch.year) * 12 + feat_value.month - epoch.month
+                features_processed['day_of_week'] = feat_value.weekday()  # 0-6 (Monday-Sunday)
+                features_processed['month'] = feat_value.month  # 1-12
+                features_processed['day_of_month'] = feat_value.day  # 1-31
+                features_processed['quarter'] = (feat_value.month - 1) // 3 + 1  # 1-4
+                features_processed['is_weekend'] = int(feat_value.weekday() >= 5)  # 0 or 1
             elif isinstance(feat_value, bool):
-                features_processed[feat_name] = float(int(feat_value))
+                features_processed[feat_name] = int(feat_value)
+            elif isinstance(feat_value, str):
+                # For string values, use label encoding
+                if feat_name not in categorical_encodings:
+                    categorical_encodings[feat_name] = {}
+                
+                if feat_value not in categorical_encodings[feat_name]:
+                    categorical_encodings[feat_name][feat_value] = len(categorical_encodings[feat_name])
+                
+                features_processed[feat_name + '_encoded'] = float(categorical_encodings[feat_name][feat_value])
+                
+                # Special handling for store_id - extract prefix if it exists
+                if feat_name == 'store_id' and '_' in feat_value:
+                    prefix = feat_value.split('_')[0]
+                    if 'store_prefix' not in categorical_encodings:
+                        categorical_encodings['store_prefix'] = {}
+                    if prefix not in categorical_encodings['store_prefix']:
+                        categorical_encodings['store_prefix'][prefix] = len(categorical_encodings['store_prefix'])
+                    features_processed['store_prefix_encoded'] = float(categorical_encodings['store_prefix'][prefix])
+
+        # # Add location-based features if both latitude and longitude exist
+        # if 'latitude' in x and 'longitude' in x:
+        #     # Distance from city center (using Osaka coordinates as reference)
+        #     osaka_lat, osaka_lon = 34.6937, 135.5023
+            
+        #     def haversine_distance(lat1, lon1, lat2, lon2):
+        #         R = 6371  # Earth's radius in kilometers
+        #         lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
+        #         dlat = lat2 - lat1
+        #         dlon = lon2 - lon1
+        #         a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+        #         c = 2 * atan2(sqrt(a), sqrt(1-a))
+        #         return R * c
+            
+        #     features_processed['distance_to_osaka_center'] = haversine_distance(
+        #         x['latitude'], x['longitude'], osaka_lat, osaka_lon
+        #     )
+            
+        #     # Add grid-based location features (divide area into 10x10 grid)
+        #     features_processed['lat_grid'] = int((x['latitude'] - 34.0) * 10)  # Roughly covering Osaka area
+        #     features_processed['lon_grid'] = int((x['longitude'] - 135.0) * 10)
         
         data.append((features_processed, y))
     
@@ -164,8 +216,8 @@ def main():
         update_delay = st.slider(
             "Update Delay (seconds)",
             min_value=0.001,
-            max_value=1.0,
-            value=0.05,
+            max_value=0.5,
+            value=0.01,
             step=0.01,
             help="Control how fast the visualization updates. Lower values update faster but may be more CPU intensive."
         )
