@@ -52,7 +52,12 @@ streamlit run regression/kappaml_api_regression_streamlit.py
 
 ## KappaML API Classification Example
 
-TBA
+### Streamlit app
+
+```bash
+streamlit run classification/kappaml_api_classification_streamlit.py
+```
+
 
 ## KappaML API Forecasting Example
 
