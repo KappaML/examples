@@ -1,6 +1,6 @@
 # KappaML Examples
 
-Examples using [KappaML](https://kappaml.com) API.
+Examples using the [KappaML](https://kappaml.com) API in differrent ways.
 
 Platform: https://kappaml.com
 
