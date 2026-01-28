@@ -3,8 +3,11 @@
 Examples using [KappaML](https://kappaml.com) API.
 
 Platform: https://kappaml.com
+
 API Documentation: https://api.kappaml.com/docs
+
 OpenAPI Schema: https://api.kappaml.com/openapi.json
+
 API Keys: https://app.kappaml.com/api-keys
 
 ## Getting Started
